@@ -2,20 +2,18 @@ import sys
 import pandas as pd
 from collections import defaultdict
 
-
-
 L_k_minus_1 = set()
 K = 2
 
 while (len(L_k_minus_1) != 0) :
-    C_k = aprioriGen(L_k_minus_1)
+    C_k = aprioriGen(L_k_minus_1, k)
     
 
 # Global Variables
 CSV_FILE_NAME = ""
 MIN_SUP = 0
 MIN_CONF = 0
-TRANSACTIONS = set()
+TRANSACTIONS = []
 
 
 def setupTransactions():
@@ -23,30 +21,35 @@ def setupTransactions():
     global TRANSACTIONS
 
     df = pd.read_csv(CSV_FILE_NAME)
-    # result = df.head(10)
-    # print(result)
     for index, row in df.iterrows():
-        transaction = [column for column, value in row.iteritems() if value]
-        TRANSACTIONS.add(transaction)
+        market_basket = ' '.join(row)
+        itemset = market_basket.split(",")
+        TRANSACTIONS.append(itemset)
+        # transaction = [column for column, value in row.iteritems() if value]
+        # TRANSACTIONS.add(transaction)
         # print(row['PRODUCT_TYPE'], row['METAL'])
-    print(TRANSACTIONS)
+    print(TRANSACTIONS[:10])
 
 
 def apriori():
+    L1 = generateLargeOneItemSet()
     L = [0]
-    L.append(generateLargeOneItemSet()) # L1
+    L.append(L1) # L1
     k = 2
-    L_k_minus_1 = L[1]
+    c = defaultdict(int)
     while (len(L[k-1]) != 0):
-        C_k = aprioriGen(TRANSACTIONS, k, L[k-1])
+        C_k = aprioriGen(L[k-1], k) # generate new candidates
         for t in TRANSACTIONS:
-            for c in C_k:
-                pass # TODO
-        L.append({c for c in C_k if c.count >= MIN_SUP}) # Lk
+            C_t = subset(C_k, t)
+            for c_item in C_t:
+                c[(c_item)] += 1
 
+        L.append({c for c in C_k if C_k[c] >= MIN_SUP}) # Lk
         k += 1
     
-    result_set = set().union(*L[1:])        
+    result_set = set().union(*L[1:])   
+    frequentItemsets(result_set)
+    highConfidenceAssociationRules(result_set)     
 
 
 def generateLargeOneItemSet(transactions):
@@ -57,10 +60,10 @@ def generateLargeOneItemSet(transactions):
     return large_one_item_set
 
 
-def aprioriGen(transactions, k, L_k_minus_1):
-    new_item_set = defaultdict(int)
+# Generates candidates
+def aprioriGen(L_k_minus_1, k):
     candidates = set()
-    
+
     # Join: join large itemsets having k-1 items
     for item1 in L_k_minus_1:
         for item2 in L_k_minus_1:
@@ -68,14 +71,67 @@ def aprioriGen(transactions, k, L_k_minus_1):
             if len(candidate) == k:
                 candidates.add(candidate)
     
-    # Prune: delete from Ck all itemsets whose (k- 1)-subsets are not in Lk-1
+    # Prune: remove from C_k all itemsets whose (k- 1)-subsets are not in Lk-1
     for candidate in candidates:
-        for transaction in transactions:
-            if candidate.issubset(transaction):
-                new_item_set[candidate] += 1
+        k_minus_1_subsets = generateSubsets(candidate)
+        remove = False
+        for sub in k_minus_1_subsets:
+            if sub not in L_k_minus_1:
+                remove = True
+                break
+        if remove:
+            candidates.discard(candidate)
     
-    return new_item_set
+    return candidates
 
+
+def generateSubsets(s):
+    k_minus_1_subsets = []
+    for item in s:
+        sub = s - {item}
+        k_minus_1_subsets.append(sub)
+    return sub
+
+
+def subset(C_k, t):
+    return [itemset for itemset in C_k if set(t) >= set(itemset)]
+
+
+def frequentItemsets(result_set):
+    min_sup_percentage = MIN_SUP * 100
+    output_lines = ["==Frequent itemsets (min_sup={percentage})\n".format(percentage=round(min_sup_percentage, 2))]
+    output_lines += ["{result}, {percentage}%".format(result=list(result), percentage=result_set[result]*100) for result in result_set]
+
+    with open("output.txt", "w") as file:
+        file.write("\n".join(output_lines))
+
+
+def highConfidenceAssociationRules(result_set):
+
+    # Generate confidence association rules
+    confidenceAssociationRules = defaultdict(float)
+    for result in result_set:
+        for item in result:
+            left = result - {item}
+            conf = result_set[left] / result_set[item]
+            confidenceAssociationRules[(left, item)] = [conf, result_set[result]]
+    
+    # Sort the rules by the decreasing order of their confidence
+    confidenceAssociationRules = dict(sorted(confidenceAssociationRules.items(), key=lambda item: item[1][0]))
+
+    # Write
+    min_conf_percentage = MIN_CONF * 100
+    output_lines = ["==High-confidence association rules (min_conf={percentage}%)".format(percentage=min_conf_percentage)]    
+    output_lines += ["{result} => {item} (Conf: {conf_percent}%, Supp: {sup_percent}%)".format(
+        result=list(result),
+        item=list(item),
+        conf_percent=result_set[(result, item)][0]*100,
+        sup_percent=result_set[(result, item)][1]*100
+    ) for result, item in result_set]
+
+    with open("output.txt", "w") as file:
+        file.write("\n".join(output_lines))
+    
 
 def main():
     """
