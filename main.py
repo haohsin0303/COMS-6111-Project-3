@@ -9,6 +9,7 @@ K = 2
 # while (len(L_k_minus_1) != 0) :
 #     C_k = aprioriGen(L_k_minus_1, k)
     
+Lk = {} # {itemset: support count}
 
 # Global Variables
 CSV_FILE_NAME = ""
@@ -71,10 +72,10 @@ def generateLargeOneItemSet():
     for transaction in TRANSACTIONS:
         for item in transaction:
             large_one_item_set[str(item)] += 1
-    for idx, x in enumerate(large_one_item_set):
-        if idx < 10:
-            print(x, large_one_item_set[x])
-    # print("'Dietary Supplement/Medications/Remedy'", large_one_item_set['Dietary Supplement/Medications/Remedy'])
+    
+    for itemset, count in large_one_item_set.items():
+        if ((count / len(TRANSACTIONS)) < MIN_SUP): 
+            del large_one_item_set[itemset]
     return large_one_item_set
 
 
@@ -239,36 +240,74 @@ def apriori2():
 
 def aprioriGen2(Lk_minus_1, k):
     Ck = []
-    print("Lk_minus_1", Lk_minus_1)
-    for i, item1 in enumerate(Lk_minus_1.keys()):
-        for j, item2 in enumerate(Lk_minus_1.keys()):
-            if j <= i:
-                continue
-            # join step
-            if k != 2:
-                temp = [item for item in item1 if item in item2]
-                joined_candidate = set(item1 + item2)
-                if (len(temp) == k-1) and (joined_candidate not in Ck):
-                    Ck.append(joined_candidate)
-            else:
-                joined_candidate = [item1] + [item2]
-                Ck.append(joined_candidate)
-            # print("Lk_minus_1[i]", Lk_minus_1[i], "Lk_minus_1[j]", Lk_minus_1[j])
-            # l1 = list(Lk_minus_1[i])[:k-2]
-            # # print("l1: ", l1)
-            # l2 = list(Lk_minus_1[j])[:k-2]
-            # # print("l2: ", l2)
-            # if l1 == l2:
-            #     # print("Lk_minus_1[i,j]", Lk_minus_1[i], Lk_minus_1[j])
-            #     Ck.append(Lk_minus_1[i]+","+Lk_minus_1[j])
-    # # prune step
-    # for itemset in Ck:
-    #     subsets = combinations(itemset, k-1)
-    #     for subset in subsets:
-    #         if frozenset(subset) not in Lk_minus_1:
-    #             Ck.remove(itemset)
-    #             break
-    return Ck
+    # print("Lk_minus_1", Lk_minus_1)
+    # for i, item1 in enumerate(Lk_minus_1.keys()):
+    #     for j, item2 in enumerate(Lk_minus_1.keys()):
+    #         if j <= i:
+    #             continue
+    #         # join step
+    #         if k != 2:
+    #             temp = [item for item in item1 if item in item2]
+    #             joined_candidate = set(item1 + item2)
+    #             if (len(temp) == k-1) and (joined_candidate not in Ck):
+    #                 Ck.append(joined_candidate)
+    #         else:
+    #             joined_candidate = [item1] + [item2]
+    #             Ck.append(joined_candidate)
+    #         # print("Lk_minus_1[i]", Lk_minus_1[i], "Lk_minus_1[j]", Lk_minus_1[j])
+    #         # l1 = list(Lk_minus_1[i])[:k-2]
+    #         # # print("l1: ", l1)
+    #         # l2 = list(Lk_minus_1[j])[:k-2]
+    #         # # print("l2: ", l2)
+    #         # if l1 == l2:
+    #         #     # print("Lk_minus_1[i,j]", Lk_minus_1[i], Lk_minus_1[j])
+    #         #     Ck.append(Lk_minus_1[i]+","+Lk_minus_1[j])
+    # # # prune step
+    # # for itemset in Ck:
+    # #     subsets = combinations(itemset, k-1)
+    # #     for subset in subsets:
+    # #         if frozenset(subset) not in Lk_minus_1:
+    # #             Ck.remove(itemset)
+    # #             break
+    # return Ck
 
-if __name__ == "__main__":
-    main()
+from itertools import combinations
+
+def aprioriGen(freqItemSets, k):
+    """
+    Generate candidate itemsets by joining frequent itemsets of size k-1,
+    and prune those that do not satisfy the Apriori property.
+
+    :param freqItemSets: a list of frequent itemsets of size k-1
+    :param k: the size of the candidate itemsets to be generated
+    :return: a list of candidate itemsets of size k
+    """
+    # Join Step: generate candidate itemsets by joining frequent itemsets of size k-1
+    Ck = []
+    nFreqSets = len(freqItemSets)
+    for i in range(nFreqSets):
+        for j in range(i+1, nFreqSets):
+            # Join two frequent itemsets only if their first k-2 items are the same
+            freqSet1 = list(freqItemSets[i])
+            freqSet2 = list(freqItemSets[j])
+            if freqSet1[:k-2] == freqSet2[:k-2]:
+                Ck.append(sorted(freqSet1 + [freqSet2[-1]]))
+
+    # Prune Step: remove candidate itemsets that do not satisfy the Apriori property
+    prunedItemSets = []
+    for candidateSet in Ck:
+        isSubSetFreq = True
+        # Generate all subsets of size k-1 of the candidate itemset
+        candidateSubSets = list(combinations(candidateSet, k-1))
+        for subSet in candidateSubSets:
+            if tuple(subSet) not in freqItemSets:
+                isSubSetFreq = False
+                break
+        if isSubSetFreq:
+            prunedItemSets.append(candidateSet)
+
+    return prunedItemSets
+
+
+# if __name__ == "__main__":
+#     main()
