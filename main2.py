@@ -1,12 +1,10 @@
-import json
 import sys
-import math
 import csv
 import apriori
-import time
+from collections import defaultdict
 
-
-L1 = {}
+L1 = defaultdict(int)
+numOfRows = 0
 
 # Global Variables
 CSV_FILE_NAME = ""
@@ -15,41 +13,35 @@ MIN_CONF = 0
 TRANSACTIONS = []
 
 def generate_transactions():
-    global L1, TRANSACTIONS
+    """
+    Opens and iterates through the CSV file to generate the transactions
+    that will be used for apriori
+
+    We do preprocessing steps like removing unnecessary information 
+    and replacing negative counts with 0 for metal concentration
+
+    """
+    global L1, TRANSACTIONS, numOfRows
     try:
-            with open(CSV_FILE_NAME, 'r') as csvfile:
-                reader = csv.reader(csvfile, delimiter=' ',
-                                    quotechar='|')
-                next(reader)
-                for row in reader:
-                    market_basket = ' '.join(row)
-                    itemset = market_basket.split(',')
-                    itemset = itemset[1:-2]
-                    # count = 1
+        with open(CSV_FILE_NAME, 'r') as file:
+            reader = csv.reader(file, delimiter=' ', quotechar='|')
+            next(reader)
+            for row in reader:
+                market_basket = ' '.join(row)
+                itemset = market_basket.split(',')[1:-5]
+                numOfRows += 1
 
-                # remove first element of itemset ('year'=> ignore value)
-
-                    itemset.pop(0)
-
-                # remove 'percent' and 'count' from itemset, count appended later
-
-                    itemset.pop()
-                    itemset.pop()
-
-                    # itemset.append(count)
-
+                if (itemset[-1] != '-1'):
                     TRANSACTIONS.append(itemset)
 
-                # calculate support
-                    for item in itemset[:-1]:
-                        if item not in L1:
-                            L1[item] =1
-                        else:
-                            L1[item] += 1
+                # count = itemset[-1] if itemset[-1] != '-1' else 0
+                # itemset[-1] = count
 
-            csvfile.close()
-    except:
-        print("Cannot open CSV file: ", CSV_FILE_NAME)
+                for item in itemset[:-1]:
+                    L1[item] += 1
+    except FileNotFoundError:
+        print("Error opening CSV file:", CSV_FILE_NAME)
+
 
 def main():
     """
@@ -81,7 +73,7 @@ def main():
 
 
     generate_transactions()
-    apriori.apriori(MIN_SUP, MIN_CONF, L1, TRANSACTIONS, len(TRANSACTIONS))
+    apriori.runApriori(MIN_SUP, MIN_CONF, L1, TRANSACTIONS, numOfRows)
 
 if __name__ == '__main__':
     main()    

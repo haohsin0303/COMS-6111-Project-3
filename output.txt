@@ -1,0 +1,47 @@
+==Frequent itemsets (min_sup=1.0%)
+[Lead], 82.49902229174815%
+[Food-Spice], 37.016034415330466%
+[Dietary Supplement/Medications/Remedy], 24.423152131403988%
+[('Food-Spice', 'Lead')], 20.219006648416112%
+[Mercury], 9.73797418850215%
+[Food Other], 8.427845131012905%
+[Toys/Children's Products], 8.232303480641377%
+[Cosmetics], 7.802111849824013%
+[Arsenic], 6.648416112631991%
+[Tableware/Pottery], 5.709816190848651%
+[('Lead', 'Dietary Supplement/Medications/Remedy')], 5.57293703558858%
+[('Lead', 'Tableware/Pottery')], 4.9276495893625345%
+[('Lead', "Toys/Children's Products")], 4.086820492764959%
+[Food-Candy], 3.187328901055925%
+[('Dietary Supplement/Medications/Remedy', 'Mercury')], 3.1286664059444664%
+[('Lead', 'Cosmetics')], 2.894016425498631%
+[Turmeric], 2.796245600312867%
+[Religious powder], 2.34649980445835%
+[('Lead', 'Food Other')], 2.287837309346891%
+[('Dietary Supplement/Medications/Remedy', 'Arsenic')], 2.190066484161126%
+[-1], 1.9554165037152915%
+[Chili Powder], 1.4665623777864685%
+[Turmeric powder], 1.4274540477121627%
+[Other], 1.4274540477121627%
+[('Food-Spice', 'Turmeric')], 1.4274540477121627%
+[('Lead', 'Turmeric')], 1.4078998826750098%
+[('Lead', 'Religious powder')], 1.4078998826750098%
+[('Lead', 'Food-Spice', 'Turmeric')], 1.4078998826750098%
+[('Mercury', 'Cosmetics')], 1.3296832225263981%
+[('Lead', '-1')], 1.2514665623777863%
+[Jewelry], 1.2319123973406336%
+[Cumin], 1.095033242080563%
+[Cadmium], 1.0754790770434102%
+[Surma], 1.0559249120062575%
+[('Lead', 'Surma')], 1.0363707469691044%
+
+==High-confidence association rules (min_conf=50.0%)
+['Lead', 'Turmeric'] => ['Food-Spice'] (Conf: 100.0%, Supp: 1.4078998826750098 %)
+['Food-Spice', 'Turmeric'] => ['Lead'] (Conf: 98.63013698630137%, Supp: 1.4078998826750098 %)
+['Surma'] => ['Lead'] (Conf: 98.14814814814815%, Supp: 1.0363707469691044 %)
+['Tableware/Pottery'] => ['Lead'] (Conf: 86.3013698630137%, Supp: 4.9276495893625345 %)
+['-1'] => ['Lead'] (Conf: 64.0%, Supp: 1.2514665623777863 %)
+['Religious powder'] => ['Lead'] (Conf: 60.0%, Supp: 1.4078998826750098 %)
+['Food-Spice'] => ['Lead'] (Conf: 54.62229265715794%, Supp: 20.219006648416112 %)
+['Turmeric'] => ['Food-Spice'] (Conf: 51.048951048951054%, Supp: 1.4274540477121627 %)
+['Turmeric'] => ['Lead'] (Conf: 50.349650349650354%, Supp: 1.4078998826750098 %)
