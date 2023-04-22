@@ -101,7 +101,7 @@ The association rule states that if Arsenic is detected, it is likely that the p
 
 Another rule that was generated was :
 [Lead, MADE IN BANGLADESH] => [Food-Spice] (Conf: 95.55555555555556%, Supp: 5.0449745795854515 %)
-The association rule states that if Lead is detected and it was made in Bangladesh, it is likely that the product type was Food-Spice with a high confidence of 95.55%. The support value of 5.04% indicates that the itemset (Food-Spice) appeared in 5.04% of all transactions. Although the support is not high, it also matches with real-world data showing that Lead is commonly food in food spices from Bangladesh, because the country utilizesr bright yellow curry led turmeric processors to add lead chromate into the spice [2].
+The association rule states that if Lead is detected and it was made in Bangladesh, it is likely that the product type was Food-Spice with a high confidence of 95.55%. The support value of 5.04% indicates that the itemset (Food-Spice) appeared in 5.04% of all transactions. Although the support is not high, it also matches with real-world data showing that Lead is commonly food in food spices from Bangladesh, because the country utilizes bright yellow curry led turmeric processors to add lead chromate into the spice [2].
 
 The last interesting rule that was generated was:
 [Tableware/Pottery] => [Lead] (Conf: 86.3013698630137%, Supp: 4.9276495893625345 %)
