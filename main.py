@@ -1,7 +1,6 @@
 import apriori
 import csv
 import sys
-import pandas as pd
 
 # Global variables
 CSV_FILE_NAME = ""
