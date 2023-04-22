@@ -134,6 +134,7 @@ def writeAssociationRules(L, totalNumOfRows, min_sup, min_conf):
 
                 # Add the association rule to the dictionary if thresholds are reached
                 if metricsAreBigger :
+                    print(list(LHS))
                     association_rule = "{LHS} => {RHS}".format(LHS = list(LHS), RHS=list(RHS))
                     metrics = (convertToPercentage(confidence_association_rule), convertToPercentage(support_association_rule))
                     association_rules[association_rule] = metrics

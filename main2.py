@@ -3,6 +3,7 @@ import csv
 import apriori
 from collections import defaultdict
 
+
 L1 = defaultdict(int)
 numOfRows = 0
 
@@ -12,7 +13,19 @@ MIN_SUP = 0
 MIN_CONF = 0
 TRANSACTIONS = []
 
+
+# Define a dictionary to map concentration units to conversion factors
+conversion_factors = {
+    'ppm': 1,
+    'mg/cm^2': 10000,
+    'mg/l': 1,
+    # add more units and conversion factors as needed
+}
+        
+
 def generate_transactions():
+
+
     """
     Opens and iterates through the CSV file to generate the transactions
     that will be used for apriori
@@ -24,13 +37,29 @@ def generate_transactions():
     global L1, TRANSACTIONS, numOfRows
     try:
         with open(CSV_FILE_NAME, 'r') as file:
-            reader = csv.reader(file, delimiter=' ', quotechar='|')
+            reader = csv.reader(file)
             next(reader)
             for row in reader:
-                market_basket = ' '.join(row)
-                itemset = market_basket.split(',')[1:-5]
-                numOfRows += 1
 
+                itemset = row[1:-4]
+
+                if (len(itemset) > 5):
+                    itemset = itemset[:5]
+                if (itemset[-2] == '-1'):
+                    itemset[-2] = '0'
+                                
+                itemset[-2] = conversion_factors[itemset[-1].lower()] * float(itemset[-2])
+                if (itemset[-2] == 0.0):
+                    itemset[-2] = ("No Metal Detected")
+                    del itemset[2]
+                else:
+                    itemset[-2] = ("Metal Detected")
+
+                itemset.append(row[7])
+                del itemset[-2]
+
+                numOfRows += 1
+                
                 if (itemset[-1] != '-1'):
                     TRANSACTIONS.append(itemset)
 
