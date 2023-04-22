@@ -46,6 +46,8 @@ The COLLECITON_DATE only provides information as to when the product was tested 
 
 Since metals have different units of measurements for each metal tested, we decided it was best to simply convert all the concentrations into ppm (parts per million) units and drop the UNITS column. This way, we no longer have to account for different units as we are iterating through the rows in the dataset. 
 
+There was no mapping performed on the dataset. The dataset was used as provided in the original link.
+
 ### Why we choose this data set?
 This data set contains the laboratory test results of the metal in consumer products. We want to know if there is any association between PRODUCT_TYPE, METAL, MANUFACTURER, and MADE_IN_COUNTRY. By analyzing this dataset, we can identify patterns in metal content that could be indicative of potential health hazards or violations. The large sample size of approximately 5,000 products is a great choice for conducting analysis and building igh confidence association rules. In short, this dataset can provide valuable insights into consumer product safety and can help customers make a holistic decision on what products they should purchase. 
 
@@ -95,16 +97,16 @@ When running the following command:
 python3 main.py INTEGRATED-DATASET.csv 0.01 0.75
 
 we get interesting results. For example, a rule that was generated was:
-[Arsenic] => [Dietary Supplement/Medications/Remedy] (Conf: 97.14285714285714%, Supp: 1.994524833789597 %)
+`[Arsenic] => [Dietary Supplement/Medications/Remedy] (Conf: 97.14285714285714%, Supp: 1.994524833789597 %)`
 
 The association rule states that if Arsenic is detected, it is likely that the product type was Dietary Supplements/Medications/Remedies with a high confidence of 97.14%. The support value of 1.99% indicates that the itemset (Arsenic and Dietary Supplements/Medications/Remedies) appeared in 1.99% of all transactions. Although the support is not high, it matches with real-world scientific studies from the CDC that dietary supplements can contain dangerous amounts of arsenic. [1] 
 
 Another rule that was generated was :
-[Lead, MADE IN BANGLADESH] => [Food-Spice] (Conf: 95.55555555555556%, Supp: 5.0449745795854515 %)
+`[Lead, MADE IN BANGLADESH] => [Food-Spice] (Conf: 95.55555555555556%, Supp: 5.0449745795854515 %)`
 The association rule states that if Lead is detected and it was made in Bangladesh, it is likely that the product type was Food-Spice with a high confidence of 95.55%. The support value of 5.04% indicates that the itemset (Food-Spice) appeared in 5.04% of all transactions. Although the support is not high, it also matches with real-world data showing that Lead is commonly food in food spices from Bangladesh, because the country utilizes bright yellow curry led turmeric processors to add lead chromate into the spice [2].
 
 The last interesting rule that was generated was:
-[Tableware/Pottery] => [Lead] (Conf: 86.3013698630137%, Supp: 4.9276495893625345 %)
+`[Tableware/Pottery] => [Lead] (Conf: 86.3013698630137%, Supp: 4.9276495893625345 %)`
 The association rule states that if we have Tableware/Pottery, it is likely that there is Lead with a high confidence of 86.3%. The support value of 4.927% indicates that the itemset (Food-Spice) appeared in 5.04% of all transactions. Although the support is not high, it also matches with real-world data, since Lead has long been used in ceramicware, both in tableware and in decorations [3]. 
 
 ## References
