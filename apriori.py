@@ -1,4 +1,6 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
+
+Rule = namedtuple('Rule', ['LHS', 'RHS', 'Confidence', 'Support'])
 
 def runApriori(D, min_sup, min_conf):
     """
@@ -8,7 +10,7 @@ def runApriori(D, min_sup, min_conf):
     """
     L1 = getLargeOneItemsets(D, min_sup)
     L = [L1]
-    k = 1 # Starts at 1 because we L1 to the L list
+    k = 1 # Starts at 1 because we add L1 to the L list
 
     while (len(L[k-1]) != 0):
         Ck = aprioriGen(L[k-1], k) # New candidates
@@ -85,6 +87,11 @@ def convertToPercentage(num):
 
 
 def writeFrequentItemsets(D, L, min_sup):
+    """
+    Handles writing the frequent itemsets to the file text
+    """
+    
+    # Open a file to write to the output
     with open('output.txt', 'w') as file:
         file.write("==Frequent itemsets (min_sup={min_sup_percent}%)\n".format(min_sup_percent = round(convertToPercentage(min_sup), 2)))
         
@@ -97,21 +104,24 @@ def writeFrequentItemsets(D, L, min_sup):
             else:
                 item = "[" + item + "]"
             file.write("{item}, {support}%\n".format(item=item, support = round(convertToPercentage(count/len(D)), 2)))
-
+        file.write("\n")
 
 def writeAssociationRules(D, L, min_sup, min_conf):
+    """
+    Handles writing hte high confidence association rules to the file text
+    """
 
     min_conf_percent = convertToPercentage(min_conf)
 
-    # Open a file to write the output
+    # Open the file once more to add to the output
     with open('output.txt', 'a') as file:
         file.write("==High-confidence association rules (min_conf={}%)\n".format(round(min_conf_percent, 2)))
 
         # Create an empty dictionary to store the itemsets
         frequency_itemset = {}
 
-        # Create an empty dictionary to store the association rules
-        association_rules = {}
+        # Create an empty list to store the association rules
+        association_rules = []
 
         # Combine the frequent itemsets into a single dictionary
         for itemset in L:
@@ -123,9 +133,12 @@ def writeAssociationRules(D, L, min_sup, min_conf):
                 frequency_itemset[key] = itemset[item]
 
         # Generate association rules from the frequent itemsets
+
+        
         for itemset in frequency_itemset:
             if len(itemset) == 1:
                 continue
+
 
             # Generate all possible LHS and RHS arguments
             for elem in itemset:
@@ -133,30 +146,33 @@ def writeAssociationRules(D, L, min_sup, min_conf):
                 LHS = tuple([item for item in itemset if item not in RHS])
                 LHS_RHS = itemset
 
-                # Check if the LHS  and RHS are both frequent itemsets
-                if LHS not in frequency_itemset or LHS_RHS not in frequency_itemset:
-                    continue
+                # Check if the LHS and RHS are both frequent itemsets and build association rule
+                if LHS in frequency_itemset and LHS_RHS in frequency_itemset:
+                    rule = create_association_rule(D, LHS, RHS, LHS_RHS, frequency_itemset, min_sup, min_conf)
+                    if rule:
+                        association_rules.append(rule)
 
-                # Calculate the confidence and support of the association rule
-                confidence_association_rule = frequency_itemset[LHS_RHS] / frequency_itemset[LHS]
-                support_association_rule = frequency_itemset[LHS_RHS] / len(D)
-
-                # Checks if the minimum support and confidence metric thresholds are reached
-                metricsAreBigger = confidence_association_rule > float(min_conf) and  support_association_rule > float(min_sup) 
-
-                # Add the association rule to the dictionary if metric thresholds are reached
-                if metricsAreBigger :
-                    LHS_str = "[" + ", ".join(list(LHS)) + "]"
-                    RHS_str = "[" + ", ".join(list(RHS)) + "]"
-                    association_rule = "{LHS} => {RHS}".format(LHS=LHS_str, RHS=RHS_str)
-                    metrics = (convertToPercentage(confidence_association_rule), convertToPercentage(support_association_rule))
-                    association_rules[association_rule] = metrics
 
         # Sort the association rules by confidence
-        sorted_association_rules = sorted(association_rules.items(), key = lambda x: x[1][0], reverse=True)
+        sorted_association_rules = sorted(association_rules, key = lambda r: r.Confidence, reverse=True)
 
         # Write the association rules to the output file
         for rule in sorted_association_rules:
-            conf = rule[1][0]
-            support = rule[1][1]
-            file.write('{} (Conf: {}%, Supp: {} %)\n'.format(rule[0], conf, support))
+             file.write('{LHS} => {RHS} (Conf: {conf}%, Supp: {supp} %)\n'.format(LHS=rule.LHS, RHS = rule.RHS, conf=rule.Confidence, supp=rule.Support))
+
+
+def create_association_rule(D, LHS, RHS, LHS_RHS, frequency_itemset, min_sup, min_conf ):
+    # Calculate the confidence and support of the association rule
+    confidence_association_rule = frequency_itemset[LHS_RHS] / frequency_itemset[LHS]
+    support_association_rule = frequency_itemset[LHS_RHS] / len(D)
+
+    # Checks if the minimum support and confidence metric thresholds are reached
+    metricsAreBigger = confidence_association_rule > float(min_conf) and  support_association_rule > float(min_sup) 
+
+    # Add the association rule to the dictionary if metric thresholds are reached
+    if metricsAreBigger :
+        LHS_str = "[" + ", ".join(list(LHS)) + "]"
+        RHS_str = "[" + ", ".join(list(RHS)) + "]"
+        rule = Rule(LHS=LHS_str, RHS=RHS_str, Confidence=convertToPercentage(confidence_association_rule), Support=convertToPercentage(support_association_rule))
+        return rule
+    
