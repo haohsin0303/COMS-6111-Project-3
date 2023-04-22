@@ -27,7 +27,7 @@ def runApriori(D, min_sup, min_conf):
         k += 1
 
     writeFrequentItemsets(D, L, min_sup)
-    writeAssociationRules(D, L, min_sup, min_conf)
+    writeHighConfidenceAssociationRules(D, L, min_sup, min_conf)
 
 
 def filterItemsets(D, c, min_sup):
@@ -57,15 +57,15 @@ def aprioriGen(Lk_1, k):
     """
     Ck = []
     itemsets = list(Lk_1.keys())
-    for index, itemset1 in enumerate(itemsets):
-        for itemset2 in itemsets[index+1:]:
-            if k == 1:
-                Ck.append([itemset1, itemset2])
-            else:
-                common_items = [item for item in itemset1 if item in itemset2]
-                candidate = set(itemset1 + itemset2)								 
-                if len(common_items) == (k-1) and (candidate not in Ck):
+    for index, itemset_1 in enumerate(itemsets):
+        for itemset_2 in itemsets[index+1:]:
+            if k != 1:
+                common_items = set(itemset_1).intersection(set(itemset_2))
+                candidate = set(itemset_1 + itemset_2)								 
+                if (candidate not in Ck) and len(common_items) == (k-1):
                     Ck.append(candidate)
+            else:
+                Ck.append([itemset_1, itemset_2])
 
     return Ck
 
@@ -92,7 +92,7 @@ def writeFrequentItemsets(D, L, min_sup):
     """
     
     # Open a file to write to the output
-    with open('output.txt', 'w') as file:
+    with open('example-run.txt', 'w') as file:
         file.write("==Frequent itemsets (min_sup={min_sup_percent}%)\n".format(min_sup_percent = round(convertToPercentage(min_sup), 2)))
         
         frequency_itemset = {item: itemset[item] for itemset in L for item in itemset}
@@ -106,15 +106,16 @@ def writeFrequentItemsets(D, L, min_sup):
             file.write("{item}, {support}%\n".format(item=item, support = round(convertToPercentage(count/len(D)), 2)))
         file.write("\n")
 
-def writeAssociationRules(D, L, min_sup, min_conf):
+
+def writeHighConfidenceAssociationRules(D, L, min_sup, min_conf):
     """
-    Handles writing hte high confidence association rules to the file text
+    Handles writing the high confidence association rules to the file text
     """
 
     min_conf_percent = convertToPercentage(min_conf)
 
     # Open the file once more to add to the output
-    with open('output.txt', 'a') as file:
+    with open('example-run.txt', 'a') as file:
         file.write("==High-confidence association rules (min_conf={}%)\n".format(round(min_conf_percent, 2)))
 
         # Create an empty dictionary to store the itemsets
@@ -133,18 +134,15 @@ def writeAssociationRules(D, L, min_sup, min_conf):
                 frequency_itemset[key] = itemset[item]
 
         # Generate association rules from the frequent itemsets
-
-        
         for itemset in frequency_itemset:
             if len(itemset) == 1:
                 continue
 
-
             # Generate all possible LHS and RHS arguments
             for elem in itemset:
+                LHS_RHS = itemset # union
                 RHS = (elem, )
                 LHS = tuple([item for item in itemset if item not in RHS])
-                LHS_RHS = itemset
 
                 # Check if the LHS and RHS are both frequent itemsets and build association rule
                 if LHS in frequency_itemset and LHS_RHS in frequency_itemset:
@@ -152,13 +150,12 @@ def writeAssociationRules(D, L, min_sup, min_conf):
                     if rule:
                         association_rules.append(rule)
 
-
         # Sort the association rules by confidence
         sorted_association_rules = sorted(association_rules, key = lambda r: r.Confidence, reverse=True)
 
         # Write the association rules to the output file
         for rule in sorted_association_rules:
-             file.write('{LHS} => {RHS} (Conf: {conf}%, Supp: {supp} %)\n'.format(LHS=rule.LHS, RHS = rule.RHS, conf=rule.Confidence, supp=rule.Support))
+             file.write("{LHS} => {RHS} (Conf: {conf}%, Supp: {supp} %)\n".format(LHS=rule.LHS, RHS = rule.RHS, conf=rule.Confidence, supp=rule.Support))
 
 
 def create_association_rule(D, LHS, RHS, LHS_RHS, frequency_itemset, min_sup, min_conf ):

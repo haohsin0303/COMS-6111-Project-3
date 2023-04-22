@@ -1,7 +1,7 @@
 import apriori
 import csv
 import sys
-from collections import defaultdict
+import pandas as pd
 
 # Global variables
 CSV_FILE_NAME = ""
@@ -19,10 +19,10 @@ def generate_transactions():
     global TRANSACTIONS
     try:
         with open(CSV_FILE_NAME, 'r') as file:
-            reader = csv.reader(file)
-            next(reader)
+            csv_reader = csv.reader(file)
+            next(csv_reader)
 
-            for row in reader:
+            for row in csv_reader:
                 itemset = row[1:-4][:5]
                 if itemset[-2] == '-1':
                     itemset[-2] = '0'
