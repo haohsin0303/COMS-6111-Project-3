@@ -10,7 +10,7 @@ In this project, we use a-priori algorithm to extract association rules from the
 - main.py
 - apriori.py
 - README.md
-- output.txt
+- example-run.txt
 - INTEGRATED-DATASET.csv
 
 ## How to run

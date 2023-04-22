@@ -1,51 +1,58 @@
-import json
-import sys
-import math
-import operator
-import copy
 from collections import defaultdict
 
+def runApriori(D, min_sup, min_conf):
+    """
+    Runs the Apriori Algorithm as defined in Section 2.1 in 
+    Fast Algorithms for Mining Association Rules:
+    Resource Link: http://www.cs.columbia.edu/~gravano/Qual/Papers/agrawal94.pdf 
+    """
+    L1 = getLargeOneItemsets(D, min_sup)
+    L = [L1]
+    k = 1 # Starts at 1 because we L1 to the L list
 
-def runApriori(min_sup, min_conf, L1, D, totalNumOfRows):
-	L1 = getLargeOneItemsets(L1, min_sup, totalNumOfRows) # generate L1 = {large 1-itemsets}
-	L = [L1]
-	k = 1
+    while (len(L[k-1]) != 0):
+        Ck = aprioriGen(L[k-1], k) # New candidates
+        c = defaultdict(int)
 
-	while (len(L[k-1]) != 0):
-		Ck = aprioriGen(L[k-1], k) # New candidates
-		c = defaultdict(int)
+        for t in D:
+            Ct = subset(Ck, t) # Candidates contained in t
+            for candidate in Ct:
+                candidateTuple = tuple(candidate)
+                c[candidateTuple] += 1 # c.count++
 
-		for t in D:
-			Ct = subset(Ck, t) # Candidates contained in t
-			for candidate in Ct:
-				candidateTuple = tuple(candidate)
-				c[candidateTuple] += 1     # c.count++
+        Lk = filterItemsets(D, c, min_sup)
+        L.append(Lk)
+        k += 1
 
-		Lk = filterItemsets(c, min_sup, totalNumOfRows)
-		L.append(Lk)
-		k += 1
-
-	writeFrequentItemsets(L, totalNumOfRows, min_sup)
-	writeAssociationRules(L, totalNumOfRows, min_sup, min_conf)
+    writeFrequentItemsets(D, L, min_sup)
+    writeAssociationRules(D, L, min_sup, min_conf)
 
 
-def filterItemsets(c, min_sup, totalNumOfRows):
+def filterItemsets(D, c, min_sup):
     """
     Filters the candidates whose count is greater than minsup
     Lk = {c ∈ Ck | c.count >= minsup} 
-    
     """
-    return {item: candidate_count for item, candidate_count in c.items() if candidate_count / totalNumOfRows >= min_sup}
+    return {item: candidate_count for item, candidate_count in c.items() if (candidate_count / len(D)) >= min_sup}
 
-def getLargeOneItemsets(L1, min_sup, totalNumOfRows):
+
+def getLargeOneItemsets(D, min_sup):
     """
     Generates the large 1-itemsets at the start of apriori
-    
     """
-    return {item: candidate_count for item, candidate_count in L1.items() if candidate_count / totalNumOfRows >= min_sup}
+    L1 = defaultdict(int)
+    for transaction in D:
+        for item in transaction:
+            L1[item] += 1
+
+    # Return dictionary with items that are greater than minsup
+    return filterItemsets(D, L1, min_sup)
 
 
 def aprioriGen(Lk_1, k):
+    """
+    Generates new candidates Ck
+    """
     Ck = []
     itemsets = list(Lk_1.keys())
     for index, itemset1 in enumerate(itemsets):
@@ -61,15 +68,13 @@ def aprioriGen(Lk_1, k):
     return Ck
 
 
-
 def subset(Ck, t):
     """
     Finds which generated candidates from Ck are a subset of the transaction t
     and returns a list.
-    """
-    
-    Ct = [itemset for itemset in Ck if set(itemset).issubset(set(t))]
-    return Ct
+    """    
+    return [itemset for itemset in Ck if set(itemset).issubset(set(t))]
+
 
 def convertToPercentage(num):
     """
@@ -78,25 +83,29 @@ def convertToPercentage(num):
     """
     return float(num) * 100
 
-def writeFrequentItemsets(L, totalNumOfRows, min_sup):
+
+def writeFrequentItemsets(D, L, min_sup):
     with open('output.txt', 'w') as file:
-        file.write("==Frequent itemsets (min_sup={min_sup_percent}%)\n".format(min_sup_percent = convertToPercentage(min_sup)))
+        file.write("==Frequent itemsets (min_sup={min_sup_percent}%)\n".format(min_sup_percent = round(convertToPercentage(min_sup), 2)))
         
         frequency_itemset = {item: itemset[item] for itemset in L for item in itemset}
         sorted_frequency_itemset = sorted(frequency_itemset.items(), key=lambda x: x[1], reverse=True)
 
         for item, count in sorted_frequency_itemset:
-            file.write("[{item}], {support}%\n".format(item=item, support = convertToPercentage(count/totalNumOfRows)))
-    
-        file.write("\n")
+            if (isinstance(item, tuple)):
+                item = "[" + ", ".join(list(item)) + "]"
+            else:
+                item = "[" + item + "]"
+            file.write("{item}, {support}%\n".format(item=item, support = round(convertToPercentage(count/len(D)), 2)))
 
-def writeAssociationRules(L, totalNumOfRows, min_sup, min_conf):
+
+def writeAssociationRules(D, L, min_sup, min_conf):
 
     min_conf_percent = convertToPercentage(min_conf)
 
     # Open a file to write the output
     with open('output.txt', 'a') as file:
-        file.write("==High-confidence association rules (min_conf={}%)\n".format(round(min_conf_percent,2)))
+        file.write("==High-confidence association rules (min_conf={}%)\n".format(round(min_conf_percent, 2)))
 
         # Create an empty dictionary to store the itemsets
         frequency_itemset = {}
@@ -107,7 +116,10 @@ def writeAssociationRules(L, totalNumOfRows, min_sup, min_conf):
         # Combine the frequent itemsets into a single dictionary
         for itemset in L:
             for item in itemset:
-                key = (item,) if not isinstance(item, tuple) else item
+                if isinstance(item, tuple):
+                    key = item
+                else:
+                    key = (item, )
                 frequency_itemset[key] = itemset[item]
 
         # Generate association rules from the frequent itemsets
@@ -117,7 +129,7 @@ def writeAssociationRules(L, totalNumOfRows, min_sup, min_conf):
 
             # Generate all possible LHS and RHS arguments
             for elem in itemset:
-                RHS = (elem,)
+                RHS = (elem, )
                 LHS = tuple([item for item in itemset if item not in RHS])
                 LHS_RHS = itemset
 
@@ -127,15 +139,16 @@ def writeAssociationRules(L, totalNumOfRows, min_sup, min_conf):
 
                 # Calculate the confidence and support of the association rule
                 confidence_association_rule = frequency_itemset[LHS_RHS] / frequency_itemset[LHS]
-                support_association_rule = frequency_itemset[LHS_RHS] / totalNumOfRows
+                support_association_rule = frequency_itemset[LHS_RHS] / len(D)
 
-                # Checks if the minimum support and confidence thresholds are reached
+                # Checks if the minimum support and confidence metric thresholds are reached
                 metricsAreBigger = confidence_association_rule > float(min_conf) and  support_association_rule > float(min_sup) 
 
-                # Add the association rule to the dictionary if thresholds are reached
+                # Add the association rule to the dictionary if metric thresholds are reached
                 if metricsAreBigger :
-                    print(list(LHS))
-                    association_rule = "{LHS} => {RHS}".format(LHS = list(LHS), RHS=list(RHS))
+                    LHS_str = "[" + ", ".join(list(LHS)) + "]"
+                    RHS_str = "[" + ", ".join(list(RHS)) + "]"
+                    association_rule = "{LHS} => {RHS}".format(LHS=LHS_str, RHS=RHS_str)
                     metrics = (convertToPercentage(confidence_association_rule), convertToPercentage(support_association_rule))
                     association_rules[association_rule] = metrics
 
@@ -144,5 +157,6 @@ def writeAssociationRules(L, totalNumOfRows, min_sup, min_conf):
 
         # Write the association rules to the output file
         for rule in sorted_association_rules:
-            file.write('{} (Conf: {}%, Supp: {} %)\n'.format(rule[0], rule[1][0], rule[1][1]))
-
+            conf = rule[1][0]
+            support = rule[1][1]
+            file.write('{} (Conf: {}%, Supp: {} %)\n'.format(rule[0], conf, support))
