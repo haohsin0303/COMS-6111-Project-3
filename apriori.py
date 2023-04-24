@@ -57,16 +57,16 @@ def aprioriGen(Lk_1, k):
     """
     Ck = []
     itemsets = list(Lk_1.keys())
-    for index, itemset_1 in enumerate(itemsets):
-        for itemset_2 in itemsets[index+1:]:
+    for i, itemset_1 in enumerate(itemsets):
+        for itemset_2 in itemsets[i+1:]:
             if k != 1:
                 common_items = set(itemset_1).intersection(set(itemset_2))
-                candidate = set(itemset_1 + itemset_2)								 
-                if (candidate not in Ck) and len(common_items) == (k-1):
-                    Ck.append(candidate)
+                if len(common_items) == k-1:
+                    candidate = set(itemset_1) | set(itemset_2)
+                    if candidate not in Ck:
+                        Ck.append(candidate)
             else:
                 Ck.append([itemset_1, itemset_2])
-
     return Ck
 
 
@@ -135,7 +135,7 @@ def writeHighConfidenceAssociationRules(D, L, min_sup, min_conf):
 
         # Generate association rules from the frequent itemsets
         for itemset in frequency_itemset:
-            if len(itemset) == 1:
+            if len(itemset) < 2:
                 continue
 
             # Generate all possible LHS and RHS arguments
@@ -145,7 +145,7 @@ def writeHighConfidenceAssociationRules(D, L, min_sup, min_conf):
                 LHS = tuple([item for item in itemset if item not in RHS])
 
                 # Check if the LHS and RHS are both frequent itemsets and build association rule
-                if LHS in frequency_itemset and LHS_RHS in frequency_itemset:
+                if LHS in frequency_itemset:
                     rule = create_association_rule(D, LHS, RHS, LHS_RHS, frequency_itemset, min_sup, min_conf)
                     if rule:
                         association_rules.append(rule)
@@ -164,7 +164,7 @@ def create_association_rule(D, LHS, RHS, LHS_RHS, frequency_itemset, min_sup, mi
     support_association_rule = frequency_itemset[LHS_RHS] / len(D)
 
     # Checks if the minimum support and confidence metric thresholds are reached
-    metricsAreBigger = confidence_association_rule > float(min_conf) and  support_association_rule > float(min_sup) 
+    metricsAreBigger = confidence_association_rule > min_conf and  support_association_rule > min_sup
 
     # Add the association rule to the dictionary if metric thresholds are reached
     if metricsAreBigger :

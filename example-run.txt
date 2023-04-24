@@ -27,25 +27,25 @@
 [MADE IN PAKISTAN], 5.46%
 [Lead, MADE IN INDIA], 5.46%
 [Lead, MADE IN BANGLADESH], 5.28%
-[No Metal Detected, COUNTRY NOT LISTED, Food-Spice], 5.16%
+[Food-Spice, COUNTRY NOT LISTED, No Metal Detected], 5.16%
 [MADE IN GEORGIA], 5.12%
 [Lead, Dietary Supplement/Medications/Remedy], 5.08%
-[Lead, Food-Spice, MADE IN BANGLADESH], 5.04%
+[Food-Spice, MADE IN BANGLADESH, Lead], 5.04%
 [Lead, Tableware/Pottery], 4.93%
 [Food-Spice, MADE IN GEORGIA], 4.85%
-[Lead, COUNTRY NOT LISTED, Food-Spice], 4.54%
-[No Metal Detected, Dietary Supplement/Medications/Remedy, COUNTRY NOT LISTED], 4.4%
+[Food-Spice, COUNTRY NOT LISTED, Lead], 4.54%
+[Dietary Supplement/Medications/Remedy, COUNTRY NOT LISTED, No Metal Detected], 4.4%
 [Food-Spice, MADE IN INDIA], 4.34%
 [Toys/Children's Products, No Metal Detected], 4.28%
 [No Metal Detected, MADE IN CHINA], 4.26%
 [Lead, MADE IN GEORGIA], 4.2%
 [No Metal Detected, MADE IN UNITED STATES], 4.18%
 [Mercury], 4.07%
-[Lead, MADE IN GEORGIA, Food-Spice], 4.07%
+[Food-Spice, Lead, MADE IN GEORGIA], 4.07%
 [Lead, Toys/Children's Products], 3.95%
 [No Metal Detected, Cosmetics], 3.87%
 [MADE IN BANGLADESH, No Metal Detected], 3.62%
-[No Metal Detected, MADE IN INDIA, Dietary Supplement/Medications/Remedy], 3.36%
+[Dietary Supplement/Medications/Remedy, No Metal Detected, MADE IN INDIA], 3.36%
 [No Metal Detected, MADE IN MEXICO], 3.32%
 [COUNTRY NOT LISTED, Tableware/Pottery], 3.23%
 [Food-Candy], 3.19%
@@ -53,13 +53,13 @@
 [Dietary Supplement/Medications/Remedy, MADE IN CHINA], 3.11%
 [Dietary Supplement/Medications/Remedy, Mercury], 2.93%
 [Lead, Cosmetics], 2.84%
-[No Metal Detected, MADE IN INDIA, Food-Spice], 2.82%
-[No Metal Detected, Food-Spice, MADE IN BANGLADESH], 2.82%
+[Food-Spice, No Metal Detected, MADE IN INDIA], 2.82%
+[Food-Spice, MADE IN BANGLADESH, No Metal Detected], 2.82%
 [Turmeric], 2.8%
 [Lead, MADE IN PAKISTAN], 2.8%
 [Food-Spice, Turmeric], 2.78%
-[Tableware/Pottery, COUNTRY NOT LISTED, Lead], 2.72%
-[MADE IN INDIA, Dietary Supplement/Medications/Remedy, Lead], 2.58%
+[COUNTRY NOT LISTED, Lead, Tableware/Pottery], 2.72%
+[Lead, Dietary Supplement/Medications/Remedy, MADE IN INDIA], 2.58%
 [No Metal Detected, Food-Candy], 2.52%
 [Toys/Children's Products, MADE IN CHINA], 2.39%
 [Lead, MADE IN MEXICO], 2.37%
@@ -68,35 +68,35 @@
 [MADE IN INDIA, Mercury], 2.17%
 [Food-Spice, MADE IN PAKISTAN], 2.13%
 [Lead, Food Other], 2.11%
-[MADE IN INDIA, Mercury, Dietary Supplement/Medications/Remedy], 2.09%
+[Dietary Supplement/Medications/Remedy, MADE IN INDIA, Mercury], 2.09%
 [MADE IN MEXICO, Food-Candy], 2.07%
 [Arsenic], 2.05%
 [Dietary Supplement/Medications/Remedy, MADE IN UNITED STATES], 2.03%
 [COUNTRY NOT LISTED, Food Other], 2.03%
-[No Metal Detected, Dietary Supplement/Medications/Remedy, MADE IN CHINA], 2.01%
+[Dietary Supplement/Medications/Remedy, No Metal Detected, MADE IN CHINA], 2.01%
 [Dietary Supplement/Medications/Remedy, Arsenic], 1.99%
 [No Metal Detected, MADE IN PAKISTAN], 1.96%
 [MADE IN PAKISTAN, Cosmetics], 1.88%
 [Lead, MADE IN UNITED STATES], 1.84%
-[No Metal Detected, Dietary Supplement/Medications/Remedy, MADE IN UNITED STATES], 1.76%
-[No Metal Detected, Toys/Children's Products, COUNTRY NOT LISTED], 1.66%
-[Food Other, No Metal Detected, COUNTRY NOT LISTED], 1.6%
-[No Metal Detected, MADE IN MEXICO, Food-Candy], 1.54%
-[Lead, MADE IN INDIA, Food-Spice], 1.53%
-[Toys/Children's Products, COUNTRY NOT LISTED, Lead], 1.51%
+[Dietary Supplement/Medications/Remedy, MADE IN UNITED STATES, No Metal Detected], 1.76%
+[COUNTRY NOT LISTED, No Metal Detected, Toys/Children's Products], 1.66%
+[COUNTRY NOT LISTED, Food Other, No Metal Detected], 1.6%
+[Food-Candy, No Metal Detected, MADE IN MEXICO], 1.54%
+[Food-Spice, Lead, MADE IN INDIA], 1.53%
+[COUNTRY NOT LISTED, Lead, Toys/Children's Products], 1.51%
 [Chili Powder], 1.47%
 [MADE IN INDIA, Arsenic], 1.47%
-[Arsenic, MADE IN INDIA, Dietary Supplement/Medications/Remedy], 1.47%
+[Dietary Supplement/Medications/Remedy, MADE IN INDIA, Arsenic], 1.47%
 [Food-Spice, Chili Powder], 1.45%
 [Turmeric powder], 1.43%
 [Other], 1.43%
 [Food-Spice, Turmeric powder], 1.43%
 [Lead, Turmeric], 1.41%
 [Lead, Religious powder], 1.41%
-[Lead, Turmeric, Food-Spice], 1.41%
+[Food-Spice, Lead, Turmeric], 1.41%
 [MADE IN MOROCCO], 1.37%
 [No Metal Detected, Turmeric], 1.37%
-[No Metal Detected, Turmeric, Food-Spice], 1.35%
+[Food-Spice, No Metal Detected, Turmeric], 1.35%
 [MADE IN INDIA, Religious powder], 1.25%
 [No Metal Detected, Toys/Children's Products, MADE IN CHINA], 1.25%
 [Jewelry], 1.23%
@@ -104,13 +104,13 @@
 [MADE IN MEXICO, Food Other], 1.17%
 [COUNTRY NOT LISTED, Cosmetics], 1.17%
 [MADE IN BANGLADESH, Turmeric], 1.15%
-[Turmeric, Food-Spice, MADE IN BANGLADESH], 1.15%
-[Toys/Children's Products, Lead, MADE IN CHINA], 1.13%
-[Cosmetics, MADE IN PAKISTAN, Lead], 1.13%
-[MADE IN PAKISTAN, Lead, Food-Spice], 1.13%
+[Food-Spice, MADE IN BANGLADESH, Turmeric], 1.15%
+[Lead, Toys/Children's Products, MADE IN CHINA], 1.13%
+[Lead, MADE IN PAKISTAN, Cosmetics], 1.13%
+[Food-Spice, Lead, MADE IN PAKISTAN], 1.13%
 [Cumin], 1.1%
 [Cosmetics, Mercury], 1.1%
-[Dietary Supplement/Medications/Remedy, COUNTRY NOT LISTED, Lead], 1.1%
+[COUNTRY NOT LISTED, Lead, Dietary Supplement/Medications/Remedy], 1.1%
 [MADE IN INDIA, Cosmetics], 1.08%
 [Food-Spice, Cumin], 1.08%
 [Surma], 1.06%
@@ -118,6 +118,8 @@
 
 ==High-confidence association rules (min_conf=75.0%)
 [Turmeric powder] => [Food-Spice] (Conf: 100.0%, Supp: 1.4274540477121627 %)
+[MADE IN INDIA, Arsenic] => [Dietary Supplement/Medications/Remedy] (Conf: 100.0%, Supp: 1.4665623777864685 %)
+[MADE IN BANGLADESH, Turmeric] => [Food-Spice] (Conf: 100.0%, Supp: 1.153695737192022 %)
 [Lead, Turmeric] => [Food-Spice] (Conf: 100.0%, Supp: 1.4078998826750098 %)
 [Turmeric] => [Food-Spice] (Conf: 99.3006993006993%, Supp: 2.7766914352757137 %)
 [Chili Powder] => [Food-Spice] (Conf: 98.66666666666667%, Supp: 1.4470082127493156 %)
@@ -127,10 +129,13 @@
 [Arsenic] => [Dietary Supplement/Medications/Remedy] (Conf: 97.14285714285714%, Supp: 1.994524833789597 %)
 [Lead, MADE IN GEORGIA] => [Food-Spice] (Conf: 96.74418604651163%, Supp: 4.067266327727806 %)
 [MADE IN INDIA, Mercury] => [Dietary Supplement/Medications/Remedy] (Conf: 96.3963963963964%, Supp: 2.092295658975362 %)
-[Lead, MADE IN BANGLADESH] => [Food-Spice] (Conf: 95.55555555555556%, Supp: 5.0449745795854515 %)
 [MADE IN GEORGIA] => [Food-Spice] (Conf: 94.65648854961832%, Supp: 4.849432929213923 %)
 [MADE IN BANGLADESH] => [Food-Spice] (Conf: 88.35164835164835%, Supp: 7.8607743449354714 %)
 [Dietary Supplement/Medications/Remedy, MADE IN UNITED STATES] => [No Metal Detected] (Conf: 86.53846153846155%, Supp: 1.759874853343762 %)
 [Tableware/Pottery] => [Lead] (Conf: 86.3013698630137%, Supp: 4.9276495893625345 %)
+[COUNTRY NOT LISTED, Tableware/Pottery] => [Lead] (Conf: 84.24242424242424%, Supp: 2.718028940164255 %)
+[Food-Spice, MADE IN GEORGIA] => [Lead] (Conf: 83.87096774193549%, Supp: 4.067266327727806 %)
 [MADE IN GEORGIA] => [Lead] (Conf: 82.06106870229007%, Supp: 4.204145482987876 %)
 [Food-Candy] => [No Metal Detected] (Conf: 79.14110429447852%, Supp: 2.5224872897927257 %)
+[COUNTRY NOT LISTED, Food Other] => [No Metal Detected] (Conf: 78.84615384615384%, Supp: 1.6034415330465388 %)
+[MADE IN BANGLADESH, No Metal Detected] => [Food-Spice] (Conf: 77.83783783783784%, Supp: 2.8157997653500195 %)
